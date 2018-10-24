@@ -5,25 +5,29 @@ def input_students
   while true do
     puts "Please enter the names of a student"
     puts "To finish, just type stop"
-    name = STDIN.gets.chomp
-    break if name == "stop"
+    @name = STDIN.gets.chomp
+    break if @name == "stop"
 
     puts "Please enter the cohort of the student"
     puts "To finish, just type stop"
-    cohort = STDIN.gets.chomp
-    break if cohort == "stop"
+    @cohort = STDIN.gets.chomp
+    break if @cohort == "stop"
 
     puts "Please enter the nationality of the student"
     puts "To finish, just type stop"
-    nationality = STDIN.gets.chomp
-    break if nationality == "stop"
+    @nationality = STDIN.gets.chomp
+    break if @nationality == "stop"
 
-    @students << {name: name, cohort: cohort, nationality: nationality}
+    push_students
     puts "Now we have #{@students.count} students. Name of next student?"
-
   end
   @students
 end
+
+def push_students
+  @students << {name: @name, cohort: @cohort.to_sym, nationality: @nationality.to_sym}
+end
+
 
 def interactive_menu
   loop do
@@ -98,7 +102,7 @@ def load_students(filename = "students.csv")
   file = File.open(filename, 'r')
   file.readlines.each do |line|
   name, cohort, nationality = line.chomp.split(',')
-      @students << {name: name, cohort: cohort.to_sym, nationality: nationality.to_sym}
+      push_students
   end
     file.close
     puts "students.csv loaded!"
@@ -115,4 +119,6 @@ def try_load_students
       exit
     end
   end
+
+try_load_students
 interactive_menu
