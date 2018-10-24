@@ -5,17 +5,17 @@ def input_students
   while true do
     puts "Please enter the names of a student"
     puts "To finish, just type stop"
-    name = gets.chomp
+    name = STDIN.gets.chomp
     break if name == "stop"
 
     puts "Please enter the cohort of the student"
     puts "To finish, just type stop"
-    cohort = gets.chomp
+    cohort = STDIN.gets.chomp
     break if cohort == "stop"
 
     puts "Please enter the nationality of the student"
     puts "To finish, just type stop"
-    nationality = gets.chomp
+    nationality = STDIN.gets.chomp
     break if nationality == "stop"
 
     @students << {name: name, cohort: cohort, nationality: nationality}
@@ -28,7 +28,7 @@ end
 def interactive_menu
   loop do
     print_menu
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
 end
 
@@ -47,6 +47,7 @@ def show_students
 end
 
 def process(selection)
+  STDIN.gets.chomp
   case selection
     when "1"
       input_students
@@ -93,8 +94,8 @@ def save_students
   puts "students.csv created!"
 end
 
-def load_students
-  file = File.open('students.csv', 'r')
+def load_students(filename = "students.csv")
+  file = File.open(filename, 'r')
   file.readlines.each do |line|
   name, cohort, nationality = line.chomp.split(',')
       @students << {name: name, cohort: cohort.to_sym, nationality: nationality.to_sym}
@@ -103,5 +104,15 @@ def load_students
     puts "students.csv loaded!"
 end
 
-
+def try_load_students
+  filename = ARGV.first
+    return if filename.nil?
+    if File.exists?(filename)
+      load_students(filename)
+      puts "Loaded #{@students.count} from #{filename}"
+    else
+      puts "Sorry, #{filename} does not exist."
+      exit
+    end
+  end
 interactive_menu
